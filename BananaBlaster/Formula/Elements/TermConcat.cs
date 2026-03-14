@@ -23,7 +23,7 @@ public class TermConcat(Term term1, Term term2) : Term
         for (int i = 0; i < Term2.VectorSize; i++)
             bitConstraints[i] = z3Context.MkEq(selfReps[i], childReps2[i]);
         for (int i = 0; i < Term1.VectorSize; i++)
-            bitConstraints[i] = z3Context.MkEq(selfReps[i + Term2.VectorSize], childReps1[i]);
+            bitConstraints[i + Term2.VectorSize] = z3Context.MkEq(selfReps[i + Term2.VectorSize], childReps1[i]);
         
         return z3Context.MkAnd(bitConstraints);
     }

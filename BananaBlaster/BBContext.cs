@@ -32,7 +32,8 @@ public class BBContext
 
         foreach (var formulaElement in allFormulaElements.Keys)
         {
-            Elements[formulaElement] = false;
+            if (!Elements.TryAdd(formulaElement, false))
+                continue;
             AddConstraint(formulaElement);
         }
     }
@@ -59,7 +60,7 @@ public class BBContext
     {
         var context = new BBContext(bvFunc);
 
-        foreach (var element in context.Elements.Keys)
+        foreach (var element in context.Elements.Keys.ToList())
             context.AddConstraint(element);
 
         return context.Solve();
@@ -92,15 +93,10 @@ public class BBContext
         {
             var parent = parentsToCheck.Pop();
             if (parent is not Function)
-                elements.Add(parent, false);
+                elements.TryAdd(parent, false);
             
             foreach (var child in parent.Children)
-            {
-                if (elements.ContainsKey(child))
-                    throw new Exception("Infinite loop in formula detected");
-                
                 parentsToCheck.Push(child);
-            }
         }
         return elements;
     }

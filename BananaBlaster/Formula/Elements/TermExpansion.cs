@@ -28,9 +28,9 @@ public class TermExpansion : Term
         var childReps = Term.GetRepresentatives(context);
         var selfReps = GetRepresentatives(context);
         
-        for (int i = 0; i < VectorSize; i++)
+        for (int i = 0; i < Term.VectorSize; i++)
             bitConstraints[i] = z3Context.MkEq(selfReps[i], childReps[i]);
-        for (int i = VectorSize; i < NewSize; i++)
+        for (int i = Term.VectorSize; i < NewSize; i++)
             bitConstraints[i] = z3Context.MkEq(selfReps[i], z3Context.MkBool(false));
         
         return z3Context.MkAnd(bitConstraints);
