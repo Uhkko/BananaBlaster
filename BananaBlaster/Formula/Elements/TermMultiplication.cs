@@ -29,12 +29,9 @@ public class TermMultiplication : Term
         if (i <= 0)
             return t1Shifted;
         
-        return new TermExtraction(
-            new TermSum(
-                t1Shifted,
-                Mul(t1, t2, i - 1)
-            ),
-            0, t1.VectorSize - 1
+        return new TermSumOverflow(
+            t1Shifted,
+            Mul(t1, t2, i - 1)
         );
     }
 
