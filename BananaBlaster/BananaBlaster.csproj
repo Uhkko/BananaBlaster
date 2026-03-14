@@ -9,6 +9,7 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.Z3" Version="4.12.2" />
+      <PackageReference Include="System.CommandLine" Version="2.0.5" />
     </ItemGroup>
 
 </Project>
