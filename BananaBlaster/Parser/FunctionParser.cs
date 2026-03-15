@@ -29,8 +29,8 @@ struct FunctionParser
 
         switch(lexer.PeekToken().TokenType)
         {
-            case TokenType.AND:
-            case TokenType.OR:
+            case TokenType.AND_AND:
+            case TokenType.OR_OR:
             case TokenType.EQUIVALENT:
             case TokenType.IMPLIES:
                 break;
@@ -43,8 +43,8 @@ struct FunctionParser
         var right = Parse(lexer) ?? throw new Exception("The right side of a binary operation cannot be empty.");
 
         return token.TokenType switch {
-            TokenType.AND => new FuncAnd(function, right),
-            TokenType.OR => new FuncOr(function, right),
+            TokenType.AND_AND => new FuncAnd(function, right),
+            TokenType.OR_OR => new FuncOr(function, right),
             TokenType.EQUIVALENT => new FuncEqual(function, right),
             TokenType.IMPLIES => new FuncImplication(function, right),
 
