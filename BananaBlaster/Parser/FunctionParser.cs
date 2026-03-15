@@ -84,17 +84,10 @@ struct FunctionParser
     }
 
     private static Function? ParseAtom(FormulaLexer lexer) {
-        var token = lexer.GetNext();
+        var atom = AtomParser.Parse(lexer);
 
-        // TODO: Better atom parsing
-        if(token.TokenType == TokenType.FALSE) return new FuncAtom(
-            new AtomConst(false)
-        );
-
-        if(token.TokenType == TokenType.TRUE) return new FuncAtom(
-            new AtomConst(true)
-        );
-
-        return null;
+        if(atom is null) return null;
+        
+        return new FuncAtom(atom);
     }
 }
