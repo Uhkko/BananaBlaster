@@ -5,7 +5,7 @@ namespace BananaBlaster.Formula.Elements;
 
 public class TermConst(BitArray bits) : Term
 {
-    private BitArray Bits { get; } = bits;
+    public BitArray Bits { get; } = bits;
 
     public override Element[] Children => [];
     protected override object[] Identifiers => Bits.Cast<object>().ToArray();
