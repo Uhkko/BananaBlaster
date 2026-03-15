@@ -30,7 +30,14 @@ class TermParser {
 
         if(term == null) return null;
 
-        // TODO: Extraction and Expansion in here
+        clone = lexer.Clone();
+        var extractedTerm = ParseExtraction(lexer, term);
+        if(extractedTerm != null)
+            term = extractedTerm;
+        else
+            lexer.CopyStateFrom(clone);
+
+        // TODO: Expansion
 
         // TODO: ITE
 
@@ -126,5 +133,27 @@ class TermParser {
 
         // TODO: Change to customizable length
         return new TermIdentifier(token.Value ?? throw new UnreachableException(), 8);
+    }
+
+    private static Term? ParseExtraction(FormulaLexer lexer, Term term)
+    {
+        if(lexer.GetNext().TokenType != TokenType.BRACKET_LEFT) return null;
+
+        var from = lexer.GetNext();
+        if(from.TokenType != TokenType.NUMBER) return null;
+
+        if(lexer.GetNext().TokenType != TokenType.DOT_DOT) return null;
+
+        var to = lexer.GetNext();
+        if(to.TokenType != TokenType.NUMBER) return null;
+
+        if(lexer.GetNext().TokenType != TokenType.BRACKET_RIGHT) return null;
+
+        // TODO: Check if these values actually make sense
+        return new TermExtraction(
+            term,
+            int.Parse(from.Value ?? throw new UnreachableException()) - 1, // One index
+            int.Parse(to.Value ?? throw new UnreachableException()) - 1    // One index
+        );
     }
 }
