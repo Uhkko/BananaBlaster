@@ -9,7 +9,7 @@ struct FunctionParser
     {
         var clone = lexer.Clone();
 
-        var function = ParseParens(lexer);
+        var function = ParseAtom(lexer);
         
         if(function is null)
         {
@@ -20,7 +20,7 @@ struct FunctionParser
         if(function is null)
         {
             lexer.CopyStateFrom(clone);
-            function = ParseAtom(lexer);
+            function = ParseParens(lexer);
         }
 
         if(function is null) {
