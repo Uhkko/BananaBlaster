@@ -1,4 +1,5 @@
-using System;
+using BananaBlaster.Parser;
+using Microsoft.Z3;
 
 namespace BananaBlaster.Cli;
 
@@ -16,6 +17,16 @@ public static class CliHandler
         var mode = options.Incremental ? "incremental " : "";
         Console.WriteLine($"Processing \"{options.Input}\" with {mode}Bit-Blasting.");
 
-        // TODO: Processing logic in here.
+        var formula = FormulaParser.Parse(options.Input);
+
+        Status? result;
+        if (options.Incremental)
+        {
+            result = BBContext.SolveIncremental<ExampleStrategy>(formula);
+        } else {
+            result = BBContext.Solve(formula);
+        }
+
+        Console.WriteLine(result);
     }
 }
