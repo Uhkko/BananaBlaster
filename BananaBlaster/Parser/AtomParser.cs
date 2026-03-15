@@ -9,22 +9,28 @@ class AtomParser {
     {
         var clone = lexer.Clone();
 
-        var atom = ParseConst(lexer);
-
-        if(atom is null)
+        var term = TermParser.Parse(lexer);
+        switch(lexer.PeekToken().TokenType)
         {
-            lexer.CopyStateFrom(clone);
-            atom = ParseIdentifier(lexer);
+            case TokenType.AND_AND:
+            case TokenType.OR_OR:
+            case TokenType.EQUIVALENT:
+            case TokenType.IMPLIES:
+            case TokenType.EQUALS:
+            case TokenType.GREATER_THAN:
+            case TokenType.LESS_THAN:
+                return ProcessConstant(lexer, clone);
+            default:
+                break;
         }
 
-        if(atom != null) return atom;
-
-        lexer.CopyStateFrom(clone);
-        var term = TermParser.Parse(lexer);
-        if(term == null) return null;
+        if(term == null)
+        {
+            return ProcessConstant(lexer, clone);
+        }
 
         clone = lexer.Clone();
-        atom = ParseExtraction(lexer, term);
+        var atom = ParseExtraction(lexer, term);
         if(atom != null) return atom;
 
         lexer.CopyStateFrom(clone);
@@ -71,5 +77,20 @@ class AtomParser {
         if(lexer.GetNext().TokenType != TokenType.BRACKET_RIGHT) return null;
 
         return new AtomExtraction(term, int.Parse(number.Value ?? throw new UnreachableException()));
+    }
+
+    private static Atom? ProcessConstant(FormulaLexer lexer, FormulaLexer clone) {
+        lexer.CopyStateFrom(clone);
+        var constant = ParseConst(lexer);
+
+        if(constant is null)
+        {
+            lexer.CopyStateFrom(clone);
+            constant = ParseIdentifier(lexer);
+        }
+
+        if(constant != null) return constant;
+
+        return null;
     }
 }
