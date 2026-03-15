@@ -30,8 +30,8 @@ public class TermOr : Term
         var selfReps = GetRepresentatives(context);
         
         for (int i = 0; i < VectorSize; i++)
-            bitConstraints[i] = z3Context.MkEq(selfReps[i], z3Context.MkAnd(childReps1[i], childReps2[i]));
+            bitConstraints[i] = z3Context.MkEq(selfReps[i], z3Context.MkOr(childReps1[i], childReps2[i]));
         
-        return z3Context.MkOr(bitConstraints);
+        return z3Context.MkAnd(bitConstraints);
     }
 }
