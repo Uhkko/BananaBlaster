@@ -10,18 +10,17 @@ class AtomParser {
         var clone = lexer.Clone();
 
         var term = TermParser.Parse(lexer);
-        switch(lexer.PeekToken().TokenType)
-        {
-            case TokenType.AND_AND:
-            case TokenType.OR_OR:
-            case TokenType.EQUIVALENT:
-            case TokenType.IMPLIES:
-            case TokenType.EQUALS:
-            case TokenType.GREATER_THAN:
-            case TokenType.LESS_THAN:
-                return ProcessConstant(lexer, clone);
-            default:
-                break;
+        if(term is TermIdentifier) {
+            switch(lexer.PeekToken().TokenType)
+            {
+                case TokenType.AND_AND:
+                case TokenType.OR_OR:
+                case TokenType.EQUIVALENT:
+                case TokenType.IMPLIES:
+                    return ProcessConstant(lexer, clone);
+                default:
+                    break;
+            }
         }
 
         if(term == null)
