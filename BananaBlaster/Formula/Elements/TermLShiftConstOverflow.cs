@@ -2,7 +2,7 @@
 
 namespace BananaBlaster.Formula.Elements;
 
-public class TermLShiftConst(Term term, int amount) : Term
+public class TermLShiftConstOverflow(Term term, int amount) : Term
 {
     private Term Term { get; } = term;
     private int Amount { get; } = amount;
@@ -10,7 +10,7 @@ public class TermLShiftConst(Term term, int amount) : Term
     public override Element[] Children => [Term];
     protected override object[] Identifiers => [Term, Amount];
 
-    public override int VectorSize => Term.VectorSize + Amount;
+    public override int VectorSize => Term.VectorSize;
 
     private static Term LShift(Term t1, int i)
     {

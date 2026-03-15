@@ -2,7 +2,7 @@
 
 namespace BananaBlaster.Formula.Elements;
 
-public class TermMultiplication : Term
+public class TermMultiplicationOverflow : Term
 {
     private Term Term1 { get; }
     private Term Term2 { get; }
@@ -10,9 +10,9 @@ public class TermMultiplication : Term
     public override Element[] Children => [Term1, Term2];
     protected override object[] Identifiers => [Term1, Term2];
 
-    public override int VectorSize => 2 * Term1.VectorSize;
+    public override int VectorSize => Term1.VectorSize;
     
-    public TermMultiplication(Term t1, Term t2)
+    public TermMultiplicationOverflow(Term t1, Term t2)
     {
         if (t1.VectorSize != t2.VectorSize)
             throw new ArgumentException($"Failed to create element: Terms have different vector sizes ({t1.VectorSize} vs. {t2.VectorSize})");
@@ -27,12 +27,12 @@ public class TermMultiplication : Term
         {
             return new TermITE(
                 new AtomExtraction(t2, i),
-                new TermExpansion(t1, t1.VectorSize + 1),
-                new TermRepeatConst(false, t1.VectorSize + 1)
+                t1,
+                new TermRepeatConst(false, t1.VectorSize)
             );
         }
         
-        return new TermSum(
+        return new TermSumOverflow(
             new TermITE(
                 new AtomExtraction(t2, i),
                 new TermLShiftConst(t1, i),
