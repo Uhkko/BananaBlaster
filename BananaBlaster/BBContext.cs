@@ -152,7 +152,11 @@ public class BBDiagnostics {
 public readonly struct SolverResult(Solver solver, BBDiagnostics diagnostics) {
     public Status Status { get; } = solver.Check();
 
-    private Model? Model { get; } = solver.Model;
+    private Model? Model {
+        get {
+            return solver.Model;
+        }
+    }
 
     public readonly string SMTLibCode {
         get {

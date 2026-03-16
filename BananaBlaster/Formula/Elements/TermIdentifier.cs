@@ -13,7 +13,7 @@ public class TermIdentifier(string name, int size) : Term
 
     public override BoolExpr CreateConstraint(BBContext context)
     {
-        context.Diagnostics.TermIdentifiers.Add(Name, GetRepresentatives(context));
+        context.Diagnostics.TermIdentifiers.TryAdd(Name, GetRepresentatives(context));
 
         return context.Z3Context.MkBool(true);
     }

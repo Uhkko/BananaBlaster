@@ -11,7 +11,7 @@ public class AtomIdentifier(string name) : Atom
 
     public override BoolExpr CreateConstraint(BBContext context)
     {
-        context.Diagnostics.AtomIdentifiers.Add(Name, GetRepresentative(context));
+        context.Diagnostics.AtomIdentifiers.TryAdd(Name, GetRepresentative(context));
 
         return context.Z3Context.MkBool(true);
     }
