@@ -35,8 +35,8 @@ public class TermMultiplicationOverflow : Term
         return new TermSumOverflow(
             new TermITE(
                 new AtomExtraction(t2, i),
-                new TermLShiftConst(t1, i),
-                new TermRepeatConst(false, t1.VectorSize + i)
+                new TermLShiftConstOverflow(t1, i),
+                new TermRepeatConst(false, t1.VectorSize)
             ),
             Mul(t1, t2, i - 1)
         );
