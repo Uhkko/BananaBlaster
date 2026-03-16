@@ -37,7 +37,11 @@ class TermParser {
         else
             lexer.CopyStateFrom(clone);
 
-        // TODO: Expansion
+        int size = ParseSize(lexer, -1);
+        if(size != -1)
+        {
+            term = new TermExpansion(term, size);
+        }
 
         // TODO: ITE
 
