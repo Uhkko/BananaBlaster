@@ -5,27 +5,27 @@ using BananaBlaster.Formula.Elements;
 namespace BananaBlaster.Parser;
 
 class TermParser {
-    public static Term? Parse(FormulaLexer lexer)
+    public static Term? Parse(FormulaLexer lexer, ParsingContext context)
     {
         var clone = lexer.Clone();
-        var term = ParseTermConst(lexer);
+        var term = ParseTermConst(lexer, context);
 
         if(term == null)
         {
             lexer.CopyStateFrom(clone);
-            term = ParseIdentifier(lexer);
+            term = ParseIdentifier(lexer, context);
         }
 
         if(term == null)
         {
             lexer.CopyStateFrom(clone);
-            term = ParseParens(lexer);
+            term = ParseParens(lexer, context);
         }
 
         if(term == null)
         {
             lexer.CopyStateFrom(clone);
-            term = ParseNot(lexer);
+            term = ParseNot(lexer, context);
         }
 
         if(term == null) return null;
@@ -59,7 +59,7 @@ class TermParser {
 
         var token = lexer.GetNext();
 
-        var right = Parse(lexer) ?? throw new Exception("The right side of a binary operation cannot be empty.");
+        var right = Parse(lexer, context) ?? throw new Exception("The right side of a binary operation cannot be empty.");
         var isConst = right is TermConst;
 
         return token.TokenType switch {
@@ -90,14 +90,14 @@ class TermParser {
         return array[0];
     }
 
-    private static Term? ParseParens(FormulaLexer lexer)
+    private static Term? ParseParens(FormulaLexer lexer, ParsingContext context)
     {
         if(lexer.GetNext().TokenType != TokenType.PAREN_LEFT)
         {
             return null;
         }
 
-        var term = Parse(lexer);
+        var term = Parse(lexer, context);
 
         if(lexer.GetNext().TokenType != TokenType.PAREN_RIGHT)
         {
@@ -107,32 +107,32 @@ class TermParser {
         return term;    
     }
 
-    private static Term? ParseNot(FormulaLexer lexer)
+    private static Term? ParseNot(FormulaLexer lexer, ParsingContext context)
     {
         if(lexer.GetNext().TokenType != TokenType.TILDE) return null;
 
-        var term = Parse(lexer);
+        var term = Parse(lexer, context);
         if(term is null) return null;
 
         return new TermNot(term);
     }
 
-    private static Term? ParseTermConst(FormulaLexer lexer)
+    private static Term? ParseTermConst(FormulaLexer lexer, ParsingContext context)
     {
         var token = lexer.GetNext();
         if(token.TokenType != TokenType.NUMBER) return null;
 
         // TODO: Change to customizable length
-        return TermConst.From(long.Parse(token.Value ?? throw new UnreachableException()), 8);
+        return TermConst.From(long.Parse(token.Value ?? throw new UnreachableException()), context.DefaultSize);
     }
 
-    private static Term? ParseIdentifier(FormulaLexer lexer)
+    private static Term? ParseIdentifier(FormulaLexer lexer, ParsingContext context)
     {
         var token = lexer.GetNext();
         if(token.TokenType != TokenType.IDENTIFIER) return null;
 
         // TODO: Change to customizable length
-        return new TermIdentifier(token.Value ?? throw new UnreachableException(), 8);
+        return new TermIdentifier(token.Value ?? throw new UnreachableException(), context.DefaultSize);
     }
 
     private static Term? ParseExtraction(FormulaLexer lexer, Term term)

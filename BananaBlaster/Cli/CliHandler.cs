@@ -17,7 +17,11 @@ public static class CliHandler
         var mode = options.Incremental ? "incremental " : "";
         Console.WriteLine($"Processing \"{options.Input}\" with {mode}Bit-Blasting.");
 
-        var formula = FormulaParser.Parse(options.Input);
+        var parsingContext = new ParsingContext {
+            DefaultSize = options.DefaultSize,
+        };
+
+        var formula = FormulaParser.Parse(options.Input, parsingContext);
 
         Status? result;
         if (options.Incremental)

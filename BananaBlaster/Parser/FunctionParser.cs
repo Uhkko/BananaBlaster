@@ -5,22 +5,22 @@ namespace BananaBlaster.Formula;
 
 struct FunctionParser
 {
-    public static Function? Parse(FormulaLexer lexer)
+    public static Function? Parse(FormulaLexer lexer, ParsingContext context)
     {
         var clone = lexer.Clone();
 
-        var function = ParseAtom(lexer);
+        var function = ParseAtom(lexer, context);
         
         if(function is null)
         {
             lexer.CopyStateFrom(clone);
-            function = ParseFuncNot(lexer);
+            function = ParseFuncNot(lexer, context);
         }
 
         if(function is null)
         {
             lexer.CopyStateFrom(clone);
-            function = ParseParens(lexer);
+            function = ParseParens(lexer, context);
         }
 
         if(function is null) {
@@ -40,7 +40,7 @@ struct FunctionParser
 
         var token = lexer.GetNext();
 
-        var right = Parse(lexer) ?? throw new Exception("The right side of a binary operation cannot be empty.");
+        var right = Parse(lexer, context) ?? throw new Exception("The right side of a binary operation cannot be empty.");
 
         return token.TokenType switch {
             TokenType.AND_AND => new FuncAnd(function, right),
@@ -52,14 +52,14 @@ struct FunctionParser
         };
     }
 
-    private static Function? ParseParens(FormulaLexer lexer)
+    private static Function? ParseParens(FormulaLexer lexer, ParsingContext context)
     {
         if(lexer.GetNext().TokenType != TokenType.PAREN_LEFT)
         {
             return null;
         }
 
-        var function = Parse(lexer);
+        var function = Parse(lexer, context);
 
         if(lexer.GetNext().TokenType != TokenType.PAREN_RIGHT)
         {
@@ -69,22 +69,22 @@ struct FunctionParser
         return function;
     }
 
-    private static Function? ParseFuncNot(FormulaLexer lexer)
+    private static Function? ParseFuncNot(FormulaLexer lexer, ParsingContext context)
     {
         if(lexer.GetNext().TokenType != TokenType.BANG)
         {
             return null;
         }
 
-        var function = Parse(lexer);
+        var function = Parse(lexer, context);
 
         if(function is null) return null;
 
         return new FuncNot(function);
     }
 
-    private static Function? ParseAtom(FormulaLexer lexer) {
-        var atom = AtomParser.Parse(lexer);
+    private static Function? ParseAtom(FormulaLexer lexer, ParsingContext context) {
+        var atom = AtomParser.Parse(lexer, context);
 
         if(atom is null) return null;
         

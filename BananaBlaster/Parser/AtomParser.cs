@@ -5,11 +5,11 @@ using BananaBlaster.Formula.Elements;
 namespace BananaBlaster.Parser;
 
 class AtomParser {
-    public static Atom? Parse(FormulaLexer lexer)
+    public static Atom? Parse(FormulaLexer lexer, ParsingContext context)
     {
         var clone = lexer.Clone();
 
-        var term = TermParser.Parse(lexer);
+        var term = TermParser.Parse(lexer, context);
         if(term is TermIdentifier) {
             switch(lexer.PeekToken().TokenType)
             {
@@ -36,7 +36,7 @@ class AtomParser {
         
         var token = lexer.GetNext();
 
-        var right = TermParser.Parse(lexer) ?? throw new Exception("The right side of a binary operation cannot be empty.");
+        var right = TermParser.Parse(lexer, context) ?? throw new Exception("The right side of a binary operation cannot be empty.");
 
         return token.TokenType switch {
             TokenType.EQUALS => new AtomEquals(term, right),

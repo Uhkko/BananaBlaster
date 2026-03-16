@@ -28,6 +28,13 @@ public static class CliBuilder
         };
         root.Options.Add(verboseOption);
 
+        var defaultSize = new Option<int>("--defaultSize", "-s")
+        {
+            Description = "The default size of the constants and identifiers.",
+            DefaultValueFactory = _ => 8
+        };
+        root.Options.Add(defaultSize);
+
         // Bind the handler
         root.SetAction((parseResult) =>
         {
@@ -36,6 +43,7 @@ public static class CliBuilder
                 Input = parseResult.GetValue(inputArg)!,
                 Incremental = parseResult.GetValue(incOption),
                 Verbose = parseResult.GetValue(verboseOption),
+                DefaultSize = parseResult.GetValue(defaultSize),
             };
 
             CliHandler.Execute(opts);
