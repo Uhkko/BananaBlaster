@@ -48,15 +48,16 @@ public class BBContext
         Elements[element] = true;
     }
 
-    private Status Solve()
+    private SolverResult Solve()
     {
         Solver.Reset();
         Solver.Add(Skeleton);
         Solver.Add(Constraints);
-        return Solver.Check();
+
+        return new SolverResult(Solver);
     }
     
-    public static Status Solve(Function bvFunc)
+    public static SolverResult Solve(Function bvFunc)
     {
         var context = new BBContext(bvFunc);
 
@@ -66,7 +67,7 @@ public class BBContext
         return context.Solve();
     }
     
-    public static Status SolveIncremental<T>(Function bvFunc) where T : SelectionStrategy, new()
+    public static SolverResult SolveIncremental<T>(Function bvFunc) where T : SelectionStrategy, new()
     {
         var context = new BBContext(bvFunc);
         var strategy = SelectionStrategy.Create<T>(context.Elements.Keys.ToList());
@@ -74,7 +75,7 @@ public class BBContext
         while (true)
         {
             var result = context.Solve();
-            if (result == Status.UNSATISFIABLE || !strategy.HasNext())
+            if (result.Status == Status.UNSATISFIABLE || !strategy.HasNext())
                 return result;
             
             var next = strategy.Next();
@@ -99,5 +100,15 @@ public class BBContext
                 parentsToCheck.Push(child);
         }
         return elements;
+    }
+}
+
+public readonly struct SolverResult(Solver solver) {
+    public Status Status { get; } = solver.Check();
+
+    public readonly string SMTLibCode {
+        get {
+            return solver.ToString();
+        }
     }
 }

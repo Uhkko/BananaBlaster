@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using BananaBlaster.Parser;
 using Microsoft.Z3;
 
@@ -24,7 +25,7 @@ public static class CliHandler
 
         var formula = FormulaParser.Parse(options.Input, parsingContext);
 
-        Status? result;
+        SolverResult? result;
         if (options.Incremental)
         {
             result = BBContext.SolveIncremental<ExampleStrategy>(formula);
@@ -32,6 +33,8 @@ public static class CliHandler
             result = BBContext.Solve(formula);
         }
 
-        Console.WriteLine(result);
+        if(result is null) throw new UnreachableException();
+
+        Console.WriteLine(result?.Status);
     }
 }
