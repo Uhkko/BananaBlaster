@@ -122,8 +122,9 @@ class TermParser {
         var token = lexer.GetNext();
         if(token.TokenType != TokenType.NUMBER) return null;
 
-        // TODO: Change to customizable length
-        return TermConst.From(long.Parse(token.Value ?? throw new UnreachableException()), context.DefaultSize);
+        var size = ParseSize(lexer, context.DefaultSize);
+
+        return TermConst.From(long.Parse(token.Value ?? throw new UnreachableException()), size);
     }
 
     private static Term? ParseIdentifier(FormulaLexer lexer, ParsingContext context)
@@ -131,8 +132,29 @@ class TermParser {
         var token = lexer.GetNext();
         if(token.TokenType != TokenType.IDENTIFIER) return null;
 
-        // TODO: Change to customizable length
-        return new TermIdentifier(token.Value ?? throw new UnreachableException(), context.DefaultSize);
+        var size = ParseSize(lexer, context.DefaultSize);
+
+        return new TermIdentifier(token.Value ?? throw new UnreachableException(), size);
+    }
+
+    private static int ParseSize(FormulaLexer lexer, int defaultSize)
+    {
+        var clone = lexer.Clone();
+
+        if(lexer.GetNext().TokenType != TokenType.UNDERSCORE)
+        {
+            lexer.CopyStateFrom(clone);
+            return defaultSize;
+        }
+
+        var number = lexer.GetNext();
+        if(number.TokenType != TokenType.NUMBER)
+        {
+            lexer.CopyStateFrom(clone);
+            return defaultSize; // Should probably error out
+        }
+
+        return int.Parse(number.Value ?? throw new UnreachableException());
     }
 
     private static Term? ParseExtraction(FormulaLexer lexer, Term term)

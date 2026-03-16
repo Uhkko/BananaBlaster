@@ -36,6 +36,7 @@ class FormulaLexer(string content)
             '*' => TokenType.STAR,
             '?' => TokenType.QUESTION_MARK,
             ':' => TokenType.COLON,
+            '_' => TokenType.UNDERSCORE,
             '.' when peek() == '.' && (++position > 0) => TokenType.DOT_DOT,
             '.' => TokenType.DOT,
             '&' when peek() == '&' && (++position > 0) => TokenType.AND_AND,
@@ -63,11 +64,11 @@ class FormulaLexer(string content)
             return new Token(TokenType.NUMBER, start, numText);
         }
 
-        if (char.IsLetter(ch) || ch == '_')
+        if (char.IsLetter(ch))
         {
             int start = position;
             while (position < content.Length &&
-                   (char.IsLetterOrDigit(content[position]) || content[position] == '_'))
+                   char.IsLetter(content[position]))
                 position++;
 
             string idText = content[start..position];
@@ -136,6 +137,7 @@ enum TokenType
     RIGHT_SHIFT,
     QUESTION_MARK,
     COLON,
+    UNDERSCORE,
     DOT, // Concat
     DOT_DOT,
     AND,
