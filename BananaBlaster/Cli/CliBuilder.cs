@@ -48,6 +48,13 @@ public static class CliBuilder
         };
         root.Options.Add(valueCapOption);
 
+        var smtLibOutputOption = new Option<string>("--smtLibOutput")
+        {
+            Description = "The file that should be used for the SMT-Lib code that the implementation generated.",
+            DefaultValueFactory = _ => ""
+        };
+        root.Options.Add(smtLibOutputOption);
+
         // Bind the handler
         root.SetAction((parseResult) =>
         {
@@ -59,6 +66,7 @@ public static class CliBuilder
                 Overflow = parseResult.GetValue(overflowOption),
                 DefaultSize = parseResult.GetValue(defaultSize),
                 ValueCap = parseResult.GetValue(valueCapOption),
+                SMTLibOutput = Path.GetFullPath(parseResult.GetValue(smtLibOutputOption) ?? throw new UnreachableException()),
             };
 
             CliHandler.Execute(opts);

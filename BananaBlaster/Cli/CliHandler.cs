@@ -82,6 +82,13 @@ public static class CliHandler
                 Console.WriteLine(TableFormatter.FormatTable(termValues, cap: options.ValueCap));
             }
         }
+
+        if(options.SMTLibOutput != "")
+        {
+            File.WriteAllText(options.SMTLibOutput, (result ?? throw new UnreachableException()).SMTLibCode);
+            Console.WriteLine();
+            Console.WriteLine($"Exported SMT-Lib code to {options.SMTLibOutput}");
+        }
     }
 
     private static string SatisfiabilityString(Status status)
