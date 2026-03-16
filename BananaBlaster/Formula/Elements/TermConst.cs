@@ -29,17 +29,6 @@ public class TermConst(BitArray bits) : Term
         return z3Context.MkAnd(bitConstraints);
     }
 
-    public override int GetHashCode()
-    {
-        var hash = new HashCode();
-
-        foreach (var b in Bits)
-            hash.Add(b);
-        hash.Add(typeof(TermConst).GetHashCode());
-
-        return Math.Abs(hash.ToHashCode());
-    }
-
     public static TermConst From(long value, int length) {
         var bits = new BitArray(length);
 
