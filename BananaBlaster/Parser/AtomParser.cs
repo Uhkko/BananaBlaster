@@ -18,6 +18,7 @@ class AtomParser {
                 case TokenType.EQUIVALENT:
                 case TokenType.IMPLIES:
                 case TokenType.EOL:
+                case TokenType.PAREN_RIGHT:
                     return ProcessConstant(lexer, clone);
                 default:
                     break;
