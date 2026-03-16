@@ -8,5 +8,5 @@ public sealed class CliOptions
     public bool Overflow { get; init; }
     public int DefaultSize { get; init; }
     public int ValueCap { get; init; }
-    public string SMTLibOutput { get; init; } = "";
+    public string? SMTLibOutput { get; init; }
 }

@@ -83,7 +83,7 @@ public static class CliHandler
             }
         }
 
-        if(options.SMTLibOutput != "")
+        if (options.SMTLibOutput is not null)
         {
             File.WriteAllText(options.SMTLibOutput, (result ?? throw new UnreachableException()).SMTLibCode);
             Console.WriteLine();

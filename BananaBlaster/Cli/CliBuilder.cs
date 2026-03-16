@@ -1,4 +1,5 @@
 using System.CommandLine;
+using System.Diagnostics;
 
 namespace BananaBlaster.Cli;
 
@@ -58,6 +59,7 @@ public static class CliBuilder
         // Bind the handler
         root.SetAction((parseResult) =>
         {
+            var smtLibOutputPath = parseResult.GetValue(smtLibOutputOption);
             var opts = new CliOptions
             {
                 Input = parseResult.GetValue(inputArg)!,
@@ -66,7 +68,7 @@ public static class CliBuilder
                 Overflow = parseResult.GetValue(overflowOption),
                 DefaultSize = parseResult.GetValue(defaultSize),
                 ValueCap = parseResult.GetValue(valueCapOption),
-                SMTLibOutput = Path.GetFullPath(parseResult.GetValue(smtLibOutputOption) ?? throw new UnreachableException()),
+                SMTLibOutput = string.IsNullOrEmpty(smtLibOutputPath) ? null : Path.GetFullPath(smtLibOutputPath)
             };
 
             CliHandler.Execute(opts);
