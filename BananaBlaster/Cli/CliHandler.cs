@@ -19,6 +19,7 @@ public static class CliHandler
 
         var parsingContext = new ParsingContext {
             DefaultSize = options.DefaultSize,
+            Overflow = options.Overflow,
         };
 
         var formula = FormulaParser.Parse(options.Input, parsingContext);

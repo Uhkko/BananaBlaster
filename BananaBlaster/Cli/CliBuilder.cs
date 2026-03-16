@@ -28,6 +28,12 @@ public static class CliBuilder
         };
         root.Options.Add(verboseOption);
 
+        var overflowOption = new Option<bool>("--overflow", "-o")
+        {
+            Description = "If the additional length of the addition should be considered overflow."
+        };
+        root.Options.Add(overflowOption);
+
         var defaultSize = new Option<int>("--defaultSize", "-s")
         {
             Description = "The default size of the constants and identifiers.",
@@ -43,6 +49,7 @@ public static class CliBuilder
                 Input = parseResult.GetValue(inputArg)!,
                 Incremental = parseResult.GetValue(incOption),
                 Verbose = parseResult.GetValue(verboseOption),
+                Overflow = parseResult.GetValue(overflowOption),
                 DefaultSize = parseResult.GetValue(defaultSize),
             };
 

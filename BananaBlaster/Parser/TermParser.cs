@@ -70,12 +70,14 @@ class TermParser {
             TokenType.AND => new TermAnd(term, right),
             TokenType.OR => new TermOr(term, right),
             TokenType.DOT => new TermConcat(term, right),
-            TokenType.LEFT_SHIFT => isConst ? new TermLShiftConst(term, IntFromConst((TermConst)right)) : new TermLShift(term, right),
+            TokenType.LEFT_SHIFT => isConst ? (
+                context.Overflow ? new TermLShiftConstOverflow(term, IntFromConst((TermConst)right)) : new TermLShiftConst(term, IntFromConst((TermConst)right))
+            ) : new TermLShift(term, right),
             TokenType.RIGHT_SHIFT => isConst ? new TermRShiftConst(term, IntFromConst((TermConst)right)) : new TermRShift(term, right),
 
-            TokenType.PLUS => new TermSum(term, right),
+            TokenType.PLUS => context.Overflow ? new TermSumOverflow(term, right) : new TermSum(term, right),
             TokenType.MINUS => new TermSubtraction(term, right),
-            TokenType.STAR => new TermMultiplication(term, right),
+            TokenType.STAR => context.Overflow ? new TermMultiplicationOverflow(term, right) : new TermMultiplication(term, right),
 
             _ => throw new UnreachableException(),
         };
