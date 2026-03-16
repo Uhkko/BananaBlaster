@@ -11,4 +11,9 @@ public abstract class Atom : Element
         var symbol = z3Context.MkSymbol(hash);
         return z3Context.MkBoolConst(symbol);
     }
+    
+    public override int GetVariableCount()
+    {
+        return 1;
+    }
 }

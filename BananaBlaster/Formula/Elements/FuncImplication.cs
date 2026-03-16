@@ -17,4 +17,14 @@ public class FuncImplication(Function f1, Function f2) : Function
         
         return context.Z3Context.MkImplies(childSkeleton1, childSkeleton2);
     }
+    
+    public override int GetOperatorCount()
+    {
+        return 1 + Func1.GetOperatorCount() + Func2.GetOperatorCount();
+    }
+    
+    public override int GetVariableCount()
+    {
+        return Func1.GetVariableCount() + Func2.GetVariableCount();
+    }
 }

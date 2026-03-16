@@ -28,6 +28,14 @@ public class TermConst(BitArray bits) : Term
         
         return z3Context.MkAnd(bitConstraints);
     }
+    
+    public override int GetOperatorCount()
+    {
+        var negCount = 0;
+        for (int i = 0; i < VectorSize; i++)
+            negCount += Bits[i] ? 1 : 0;
+        return VectorSize - 1 + negCount;
+    }
 
     public static TermConst From(long value, int length) {
         var bits = new BitArray(length);

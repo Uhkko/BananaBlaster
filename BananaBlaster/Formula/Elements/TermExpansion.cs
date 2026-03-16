@@ -35,4 +35,9 @@ public class TermExpansion : Term
         
         return z3Context.MkAnd(bitConstraints);
     }
+    
+    public override int GetOperatorCount()
+    {
+        return Term.VectorSize + 2 * (NewSize - Term.VectorSize) + NewSize - 1;
+    }
 }

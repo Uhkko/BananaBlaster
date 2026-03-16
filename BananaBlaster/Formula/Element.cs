@@ -9,6 +9,9 @@ public abstract class Element
     
     public abstract BoolExpr CreateConstraint(BBContext context);
 
+    public abstract int GetVariableCount();
+    public abstract int GetOperatorCount();
+    
     public override int GetHashCode()
     {
         var hash = new HashCode();

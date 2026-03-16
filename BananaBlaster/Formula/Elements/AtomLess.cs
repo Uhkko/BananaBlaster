@@ -36,4 +36,9 @@ public class AtomLess : Atom
         
         return z3Context.MkEq(selfRep, subRep);
     }
+
+    public override int GetOperatorCount()
+    {
+        return 1;
+    }
 }

@@ -17,4 +17,9 @@ public class TermIdentifier(string name, int size) : Term
 
         return context.Z3Context.MkBool(true);
     }
+    
+    public override int GetOperatorCount()
+    {
+        return 1;
+    }
 }

@@ -16,19 +16,38 @@ public static class CliHandler
             Overflow = options.Overflow,
         };
 
+        var parsingStartTime = DateTime.Now;
         var formula = FormulaParser.Parse(options.Input, parsingContext);
+        var parsingEndTime = DateTime.Now;
 
         SolverResult? result;
+        var solvingStartTime = DateTime.Now;
         if (options.Incremental)
         {
             result = BBContext.SolveIncremental<ExampleStrategy>(formula);
         } else {
             result = BBContext.Solve(formula);
         }
+        var solvingEndTime = DateTime.Now;
 
         if(result is null) throw new UnreachableException();
 
         Console.WriteLine(result?.Status);
+        if (options.Verbose)
+        {
+            Console.WriteLine();
+
+            var parsingDuration = parsingEndTime.Subtract(parsingStartTime);
+            var solvingDuration = solvingEndTime.Subtract(solvingStartTime);
+            Console.WriteLine($"Parsing Time: {parsingDuration.TotalSeconds}s");
+            Console.WriteLine($"Solving Time: {solvingDuration.TotalSeconds}s");
+            
+            Console.WriteLine();
+            
+            Console.WriteLine($"Variable Count: {result.Value.VariableCount}");
+            Console.WriteLine($"Operator Count: {result.Value.OperatorCount}");
+        }
+        
         if(options.Verbose && result?.Status == Status.SATISFIABLE)
         {
             Console.WriteLine();

@@ -29,6 +29,8 @@ public class BBContext
         Elements = FindFormulaElements(Formula);
 
         Diagnostics = new BBDiagnostics();
+        Diagnostics.OperatorCount += Formula.GetOperatorCount();
+        Diagnostics.VariableCount += Formula.GetVariableCount();
     }
     
     public void AddElement(Element element)
@@ -51,6 +53,9 @@ public class BBContext
         var constraint = element.CreateConstraint(this);
         Constraints.Add(constraint);
         Elements[element] = true;
+        
+        Diagnostics.OperatorCount += element.GetOperatorCount();
+        Diagnostics.VariableCount += element.GetVariableCount();
     }
 
     private SolverResult Solve()
@@ -112,6 +117,9 @@ public class BBDiagnostics {
     public Dictionary<string, BoolExpr> AtomIdentifiers { get; } = [];
     public Dictionary<string, BoolExpr[]> TermIdentifiers { get; } = [];
 
+    public int OperatorCount { get; set; }
+    public int VariableCount { get; set; }
+    
     public Dictionary<string, bool> GetAtomValues(Model model)
     {
         Dictionary<string, bool> result = [];
@@ -164,6 +172,9 @@ public readonly struct SolverResult(Solver solver, BBDiagnostics diagnostics) {
         }
     }
 
+    public int OperatorCount => diagnostics.OperatorCount;
+    public int VariableCount => diagnostics.VariableCount;
+    
     public Dictionary<string, bool> GetAtomValues()
     {
         return diagnostics.GetAtomValues(Model ?? throw new ArgumentException("This function cannot be called if there is no model."));

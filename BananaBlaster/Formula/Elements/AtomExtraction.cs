@@ -25,4 +25,9 @@ public class AtomExtraction : Atom
         var selfReps = GetRepresentative(context);
         return context.Z3Context.MkEq(selfReps, childReps[Index]);
     }
+    
+    public override int GetOperatorCount()
+    {
+        return 1;
+    }
 }

@@ -20,4 +20,9 @@ public abstract class Term : Element
         
         return representatives;
     }
+    
+    public override int GetVariableCount()
+    {
+        return VectorSize;
+    }
 }

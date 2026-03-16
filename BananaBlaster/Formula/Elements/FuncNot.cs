@@ -14,4 +14,14 @@ public class FuncNot(Function func) : Function
         var childSkeleton = Func.CreateConstraint(context);
         return context.Z3Context.MkNot(childSkeleton);
     }
+    
+    public override int GetOperatorCount()
+    {
+        return 1 + Func.GetOperatorCount();
+    }
+    
+    public override int GetVariableCount()
+    {
+        return Func.GetVariableCount();
+    }
 }

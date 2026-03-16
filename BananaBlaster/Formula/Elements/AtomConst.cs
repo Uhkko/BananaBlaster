@@ -16,4 +16,9 @@ public class AtomConst(bool value) : Atom
 
         return Value ? selfRep : z3Context.MkNot(selfRep);
     }
+
+    public override int GetOperatorCount()
+    {
+        return 1;
+    }
 }

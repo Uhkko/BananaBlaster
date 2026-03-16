@@ -14,4 +14,14 @@ public class FuncAtom(Atom atom) : Function
         var atomRep = Atom.GetRepresentative(context);
         return atomRep;
     }
+    
+    public override int GetOperatorCount()
+    {
+        return 0;
+    }
+
+    public override int GetVariableCount()
+    {
+        return 1;
+    }
 }

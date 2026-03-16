@@ -60,4 +60,14 @@ public class TermSum : Term
         
         return z3Context.MkAnd(bitConstraints);
     }
+    
+    public override int GetOperatorCount()
+    {
+        return 9 * VectorSize - 6;
+    }
+
+    public override int GetVariableCount()
+    {
+        return 2 * VectorSize;
+    }
 }

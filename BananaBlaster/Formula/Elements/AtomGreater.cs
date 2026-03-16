@@ -36,4 +36,9 @@ public class AtomGreater : Atom
         
         return z3Context.MkEq(selfRep, subRep);
     }
+    
+    public override int GetOperatorCount()
+    {
+        return 1;
+    }
 }

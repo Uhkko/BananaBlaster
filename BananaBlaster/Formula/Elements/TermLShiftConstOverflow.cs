@@ -38,4 +38,9 @@ public class TermLShiftConstOverflow(Term term, int amount) : Term
         
         return z3Context.MkAnd(bitConstraints);
     }
+    
+    public override int GetOperatorCount()
+    {
+        return 2 * VectorSize - 1;
+    }
 }

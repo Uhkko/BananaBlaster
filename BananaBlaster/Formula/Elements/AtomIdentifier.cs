@@ -15,4 +15,9 @@ public class AtomIdentifier(string name) : Atom
 
         return context.Z3Context.MkBool(true);
     }
+    
+    public override int GetOperatorCount()
+    {
+        return 0;
+    }
 }

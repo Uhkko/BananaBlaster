@@ -27,4 +27,9 @@ public class TermConcat(Term term1, Term term2) : Term
         
         return z3Context.MkAnd(bitConstraints);
     }
+    
+    public override int GetOperatorCount()
+    {
+        return 2 * VectorSize - 1;
+    }
 }

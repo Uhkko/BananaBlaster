@@ -32,4 +32,9 @@ public class TermRepeatConst : Term
         
         return z3Context.MkAnd(bitConstraints);
     }
+    
+    public override int GetOperatorCount()
+    {
+        return 3 * VectorSize - 1;
+    }
 }

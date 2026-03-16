@@ -40,4 +40,9 @@ public class TermITE : Term
         
         return z3Context.MkAnd(bitConstraints);
     }
+    
+    public override int GetOperatorCount()
+    {
+        return 6 * VectorSize - 1;
+    }
 }

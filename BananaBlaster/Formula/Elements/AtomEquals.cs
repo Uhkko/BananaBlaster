@@ -33,4 +33,9 @@ public class AtomEquals : Atom
         var selfRep = GetRepresentative(context);
         return z3Context.MkEq(selfRep, childConstraint);
     }
+    
+    public override int GetOperatorCount()
+    {
+        return 2 * Term1.VectorSize;
+    }
 }
