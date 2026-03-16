@@ -41,6 +41,13 @@ public static class CliBuilder
         };
         root.Options.Add(defaultSize);
 
+        var valueCapOption = new Option<int>("--valueCap", "-c")
+        {
+            Description = "The cap how many values should be printed.",
+            DefaultValueFactory = _ => 10
+        };
+        root.Options.Add(valueCapOption);
+
         // Bind the handler
         root.SetAction((parseResult) =>
         {
@@ -51,6 +58,7 @@ public static class CliBuilder
                 Verbose = parseResult.GetValue(verboseOption),
                 Overflow = parseResult.GetValue(overflowOption),
                 DefaultSize = parseResult.GetValue(defaultSize),
+                ValueCap = parseResult.GetValue(valueCapOption),
             };
 
             CliHandler.Execute(opts);

@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using BananaBlaster.Cli.Format;
 using BananaBlaster.Parser;
 using Microsoft.Z3;
 
@@ -8,8 +9,11 @@ public static class CliHandler
 {
     public static void Execute(CliOptions options)
     {
-        var mode = options.Incremental ? "incremental " : "";
-        Console.WriteLine($"Processing \"{options.Input}\" with {mode}Bit-Blasting.\n");
+        if(options.Verbose)
+        {
+            var mode = options.Incremental ? "incremental " : "";
+            Console.WriteLine($"Processing \"{options.Input}\" with {mode}Bit-Blasting.\n");
+        }
 
         var parsingContext = new ParsingContext {
             DefaultSize = options.DefaultSize,
@@ -32,7 +36,8 @@ public static class CliHandler
 
         if(result is null) throw new UnreachableException();
 
-        Console.WriteLine(result?.Status);
+        Console.WriteLine($"{(options.Verbose ? "Status: " : "")}{SatisfiabilityString(result.Value.Status)}");
+
         if (options.Verbose)
         {
             Console.WriteLine();
@@ -43,34 +48,50 @@ public static class CliHandler
             Console.WriteLine($"Solving Time: {solvingDuration.TotalSeconds}s");
             
             Console.WriteLine();
-            
             Console.WriteLine($"Variable Count: {result.Value.VariableCount}");
             Console.WriteLine($"Operator Count: {result.Value.OperatorCount}");
         }
-        
-        if(options.Verbose && result?.Status == Status.SATISFIABLE)
-        {
-            Console.WriteLine();
 
+        if (options.Verbose && result?.Status == Status.SATISFIABLE)
+        {
             var atomValues = result.Value.GetAtomValues();
             var termValues = result.Value.GetTermValues();
 
-            if(atomValues.Count() > 0)
+            Console.WriteLine();      // blank line before the block
+            
+            if (atomValues.Any() && termValues.Any())
             {
-                Console.WriteLine("Atom values:");
-                foreach (var elem in atomValues)
-                {
-                    Console.WriteLine($"{elem.Key} = {elem.Value}");
-                }
+                string output = SideBySideRenderer.Render(
+                    leftData:  atomValues,
+                    rightData: termValues,
+                    leftTitle:  "Atom values:",
+                    rightTitle: "Term values:",
+                    cap: options.ValueCap,
+                    gap: 6
+                );
+                Console.WriteLine(output);
             }
-
-            if(termValues.Count() > 0) {
-                Console.WriteLine("Term values:");
-                foreach (var elem in termValues)
-                {
-                    Console.WriteLine($"{elem.Key} = {elem.Value}");
-                }
+            else if (atomValues.Any())
+            {
+                Console.WriteLine(" \x1B[4mAtom values:\x1B[0m");
+                Console.WriteLine(TableFormatter.FormatTable(atomValues, cap: options.ValueCap));
+            }
+            else if (termValues.Any())
+            {
+                Console.WriteLine(" \x1B[4mTerm values:\x1B[0m");
+                Console.WriteLine(TableFormatter.FormatTable(termValues, cap: options.ValueCap));
             }
         }
+    }
+
+    private static string SatisfiabilityString(Status status)
+    {
+        return status switch
+        {
+            Status.UNSATISFIABLE => "\x1B[31mUNSATISFIABLE\x1B[0m",
+            Status.UNKNOWN => "UNKNOWN",
+            Status.SATISFIABLE => "\x1B[32mSATISFIABLE\x1B[0m",
+            _ => throw new UnreachableException(),
+        };
     }
 }
