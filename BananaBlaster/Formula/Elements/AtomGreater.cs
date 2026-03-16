@@ -24,12 +24,12 @@ public class AtomGreater : Atom
         var z3Context = context.Z3Context;
         var selfRep = GetRepresentative(context);
 
-        var subAtom = new AtomExtraction(
-            new TermSubtraction(
-                new TermExpansion(Term2, Term2.VectorSize + 1),
-                new TermExpansion(Term1, Term1.VectorSize + 1)
+        var subAtom = new AtomExtraction( // (a_n - b_n)[n]
+            new TermSubtraction( // a_n - b_n
+                new TermExpansion(Term1, Term1.VectorSize + 1), // a_n
+                new TermExpansion(Term2, Term2.VectorSize + 1)  // b_n
             ),
-            Term1.VectorSize
+            Term1.VectorSize // n
         );
         context.AddElement(subAtom);
         var subRep = subAtom.GetRepresentative(context);
