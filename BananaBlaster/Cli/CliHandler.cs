@@ -8,15 +8,8 @@ public static class CliHandler
 {
     public static void Execute(CliOptions options)
     {
-        if (options.Verbose)
-        {
-            Console.WriteLine("[DEBUG] Parsed options:");
-            Console.WriteLine($"  Input       = {options.Input}");
-            Console.WriteLine($"  Incremental = {options.Incremental}");
-        }
-
         var mode = options.Incremental ? "incremental " : "";
-        Console.WriteLine($"Processing \"{options.Input}\" with {mode}Bit-Blasting.");
+        Console.WriteLine($"Processing \"{options.Input}\" with {mode}Bit-Blasting.\n");
 
         var parsingContext = new ParsingContext {
             DefaultSize = options.DefaultSize,
@@ -36,5 +29,29 @@ public static class CliHandler
         if(result is null) throw new UnreachableException();
 
         Console.WriteLine(result?.Status);
+        if(options.Verbose && result?.Status == Status.SATISFIABLE)
+        {
+            Console.WriteLine();
+
+            var atomValues = result.Value.GetAtomValues();
+            var termValues = result.Value.GetTermValues();
+
+            if(atomValues.Count() > 0)
+            {
+                Console.WriteLine("Atom values:");
+                foreach (var elem in atomValues)
+                {
+                    Console.WriteLine($"{elem.Key} = {elem.Value}");
+                }
+            }
+
+            if(termValues.Count() > 0) {
+                Console.WriteLine("Term values:");
+                foreach (var elem in termValues)
+                {
+                    Console.WriteLine($"{elem.Key} = {elem.Value}");
+                }
+            }
+        }
     }
 }
