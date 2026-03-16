@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Numerics;
 using BananaBlaster.Formula;
 using Microsoft.Z3;
 
@@ -135,19 +136,19 @@ public class BBDiagnostics {
         return result;
     }
 
-    public Dictionary<string, int> GetTermValues(Model model)
+    public Dictionary<string, BigInteger> GetTermValues(Model model)
     {
-        Dictionary<string, int> result = [];
+        Dictionary<string, BigInteger> result = [];
 
         foreach(var elem in TermIdentifiers)
         {
-            int value = 0;
+            BigInteger value = 0;
             for(int i = 0; i < elem.Value.Length; ++i)
             {
                 var interpretation = model.ConstInterp(elem.Value[i]);
                 if(!interpretation.IsBool) throw new UnreachableException("The interpretation is always a boolean.");
 
-                value |= Convert.ToInt32(interpretation.BoolValue > 0) << i;
+                value |= new BigInteger(Convert.ToInt32(interpretation.BoolValue > 0)) << i;
             }
 
             result.Add(elem.Key, value);
@@ -180,7 +181,7 @@ public readonly struct SolverResult(Solver solver, BBDiagnostics diagnostics) {
         return diagnostics.GetAtomValues(Model ?? throw new ArgumentException("This function cannot be called if there is no model."));
     }
 
-    public Dictionary<string, int> GetTermValues()
+    public Dictionary<string, BigInteger> GetTermValues()
     {
         return diagnostics.GetTermValues(Model ?? throw new ArgumentException("This function cannot be called if there is no model."));
     }

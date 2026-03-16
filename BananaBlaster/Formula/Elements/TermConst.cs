@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Numerics;
 using Microsoft.Z3;
 
 namespace BananaBlaster.Formula.Elements;
@@ -37,7 +38,7 @@ public class TermConst(BitArray bits) : Term
         return VectorSize - 1 + negCount;
     }
 
-    public static TermConst From(long value, int length) {
+    public static TermConst From(BigInteger value, int length) {
         var bits = new BitArray(length);
 
         for(int i = 0; i < length; ++i) {

@@ -24,10 +24,10 @@ public class AtomLess : Atom
         var z3Context = context.Z3Context;
         var selfRep = GetRepresentative(context);
 
-        var subAtom = new AtomExtraction( // (b_n - a_n)[n]
-            new TermSubtraction( // b_n - a_n
-                new TermExpansion(Term2, Term2.VectorSize + 1), // b_n
-                new TermExpansion(Term1, Term1.VectorSize + 1)  // a_n
+        var subAtom = new AtomExtraction( // (a_n - b_n)[n]
+            new TermSubtraction( // a_n - b_n
+                new TermExpansion(Term1, Term1.VectorSize + 1), // a_n
+                new TermExpansion(Term2, Term2.VectorSize + 1)  // b_n
             ),
             Term1.VectorSize // n
         );
