@@ -11,9 +11,17 @@ This program is a CLI-Tool that can check formulas with Bit-Vector-Arithmetic:
 ./BananaBlaster "(x - 2) > 1 => false"
 ```
 
-The program uses normal bit-blasting by default.To enable incremenal bit-blasting the flag `--incremental` or `--inc` has to be enabled:
+The program uses normal bit-blasting by default. To enable incremenal bit-blasting the flag `--incremental` or `--inc` has to be enabled:
 ```sh
 ./BananaBlaster "(x - 2) > 1 => false" --incremental
+```
+
+---
+
+By default the program only outputs if the formula is `SATISFIABLE` or not.
+To get more information, it is possible to use the `--verbose` or `-v` flag that adds different metadata like the values of the identifiers and the time the solver took.
+```sh
+./BananaBlaster "(x - 2) > 1 => false" --verbose
 ```
 
 ## License
