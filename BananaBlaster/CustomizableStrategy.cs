@@ -15,13 +15,6 @@ public sealed class CustomizableStrategy : SelectionStrategy<List<Type>>
 
         Types = types;
 
-        foreach(var type in types)
-        {
-            Console.Write(type);
-            Console.Write(',');
-        }
-        Console.WriteLine();
-
         Buckets.Clear();
         foreach(var _ in Types) Buckets.Add([]);
 
@@ -34,6 +27,7 @@ public sealed class CustomizableStrategy : SelectionStrategy<List<Type>>
                 }
 
                 Buckets[i].Add(element);
+                break;
             }
         }
     }
