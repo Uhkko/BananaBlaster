@@ -78,10 +78,10 @@ public class BBContext
         return context.Solve();
     }
     
-    public static SolverResult SolveIncremental<T>(Function bvFunc) where T : SelectionStrategy, new()
+    public static SolverResult SolveIncremental<T, O>(Function bvFunc, O data) where T : SelectionStrategy<O>, new()
     {
         var context = new BBContext(bvFunc);
-        var strategy = SelectionStrategy.Create<T>(context.Elements.Keys.ToList());
+        var strategy = SelectionStrategy<O>.Create<T>(context.Elements.Keys.ToList(), data);
 
         while (true)
         {
@@ -93,6 +93,11 @@ public class BBContext
             foreach (var element in next)
                 context.AddConstraint(element);
         }
+    }
+
+    public static SolverResult SolveIncremental<T>(Function bvFunc) where T : SelectionStrategy<object>, new()
+    {
+        return SolveIncremental<T, object>(bvFunc, new object());
     }
     
     private Dictionary<Element, bool> FindFormulaElements(Element root)

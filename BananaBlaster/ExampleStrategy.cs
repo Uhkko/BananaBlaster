@@ -2,13 +2,13 @@
 
 namespace BananaBlaster;
 
-public class ExampleStrategy : SelectionStrategy
+public class ExampleStrategy : SelectionStrategy<object>
 {
     private int _currentIteration;
     private List<Element> Atoms { get; } = [];
     private List<Element> Terms { get; } = [];
 
-    protected override void SetUp()
+    protected override void SetUp(Object data)
     {
         _currentIteration = 0;
         Atoms.Clear();

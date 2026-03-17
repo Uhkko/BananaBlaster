@@ -23,6 +23,12 @@ public static class CliBuilder
         };
         root.Options.Add(incOption);
 
+        var strategyOption = new Option<string>("--strategy")
+        {
+            Description = "The preferred strategy for incremental bit blasting."
+        };
+        root.Options.Add(strategyOption);
+
         var verboseOption = new Option<bool>("--verbose", "-v")
         {
             Description = "Show detailed output"
@@ -64,6 +70,7 @@ public static class CliBuilder
             {
                 Input = parseResult.GetValue(inputArg)!,
                 Incremental = parseResult.GetValue(incOption),
+                Strategy = GetStrategy(parseResult.GetValue(strategyOption)),
                 Verbose = parseResult.GetValue(verboseOption),
                 Overflow = parseResult.GetValue(overflowOption),
                 DefaultSize = parseResult.GetValue(defaultSize),
@@ -75,5 +82,11 @@ public static class CliBuilder
         });
 
         return root;
+    }
+
+    private static List<Type>? GetStrategy(string? strategy) {
+        if (strategy is null) return null;
+
+        return CustomizableStrategy.ParseStragegy(strategy);
     }
 }

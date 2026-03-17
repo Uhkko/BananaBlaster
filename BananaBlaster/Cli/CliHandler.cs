@@ -28,7 +28,11 @@ public static class CliHandler
         var solvingStartTime = DateTime.Now;
         if (options.Incremental)
         {
-            result = BBContext.SolveIncremental<ExampleStrategy>(formula);
+            if (options.Strategy != null) {
+                result = BBContext.SolveIncremental<CustomizableStrategy, List<Type>>(formula, options.Strategy);
+            } else {
+                result = BBContext.SolveIncremental<ExampleStrategy>(formula);
+            }
         } else {
             result = BBContext.Solve(formula);
         }
